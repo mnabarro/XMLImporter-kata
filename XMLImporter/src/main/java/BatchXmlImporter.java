@@ -19,9 +19,16 @@ import static java.nio.file.Files.walk;
 public class BatchXmlImporter {
 
     public void importFiles(Path folderPath) throws IOException, JAXBException, SQLException {
-
-        List<Path> paths = getPathList(folderPath);
-
+        final String fileExtension = ".xml";
+        List<Path> paths;
+        try (Stream<Path> pathStream = walk(folderPath)
+                .filter(Files::isRegularFile)
+                .filter(filePath ->
+                        filePath.toString()
+                                .endsWith(fileExtension))) {
+            paths = pathStream
+                    .collect(Collectors.toList());
+        }
         ArrayList<Company> companies = new ArrayList<>();
         for (Path path : paths) {
             File file = new File(path.toString());
@@ -67,20 +74,6 @@ public class BatchXmlImporter {
                 }
             }
         }
-    }
-
-    private static List<Path> getPathList(Path folderPath) throws IOException {
-        final String fileExtension = ".xml";
-        List<Path> paths;
-        try (Stream<Path> pathStream = walk(folderPath)
-                .filter(Files::isRegularFile)
-                .filter(filePath ->
-                        filePath.toString()
-                                .endsWith(fileExtension))) {
-            paths = pathStream
-                    .collect(Collectors.toList());
-        }
-        return paths;
     }
 
 }
