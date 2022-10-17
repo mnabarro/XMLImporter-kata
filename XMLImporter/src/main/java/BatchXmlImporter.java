@@ -17,26 +17,14 @@ import java.util.stream.Stream;
 import static java.nio.file.Files.walk;
 
 public class BatchXmlImporter {
-
     public void importFiles(Path folderPath) throws IOException, JAXBException, SQLException {
-        final String fileExtension = ".xml";
-        List<Path> paths;
-        try (Stream<Path> pathStream = walk(folderPath)
-                .filter(Files::isRegularFile)
-                .filter(filePath ->
-                        filePath.toString()
-                                .endsWith(fileExtension))) {
-            paths = pathStream
-                    .collect(Collectors.toList());
-        }
+
+        List<Path> paths = getPathList(folderPath);
+
         ArrayList<Company> companies = new ArrayList<>();
-        for (Path path : paths) {
-            File file = new File(path.toString());
-            JAXBContext jaxbContext = JAXBContext.newInstance(Company.class);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            Company company = (Company) jaxbUnmarshaller.unmarshal(file);
-            companies.add(company);
-        }
+
+        fileListToCompanyList(paths, companies);
+
         for (Company company : companies) {
             try (Connection conn = DriverManager.getConnection(
                     "jdbc:postgresql://127.0.0.1:5432/postgres", "postgres", "postgres")) {
@@ -74,6 +62,30 @@ public class BatchXmlImporter {
                 }
             }
         }
+    }
+
+    private static void fileListToCompanyList(List<Path> paths, ArrayList<Company> companies) throws JAXBException {
+        for (Path path : paths) {
+            File file = new File(path.toString());
+            JAXBContext jaxbContext = JAXBContext.newInstance(Company.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            Company company = (Company) jaxbUnmarshaller.unmarshal(file);
+            companies.add(company);
+        }
+    }
+
+    private static List<Path> getPathList(Path folderPath) throws IOException {
+        final String fileExtension = ".xml";
+        List<Path> paths;
+        try (Stream<Path> pathStream = walk(folderPath)
+                .filter(Files::isRegularFile)
+                .filter(filePath ->
+                        filePath.toString()
+                                .endsWith(fileExtension))) {
+            paths = pathStream
+                    .collect(Collectors.toList());
+        }
+        return paths;
     }
 
 }
