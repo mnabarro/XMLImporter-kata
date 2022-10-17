@@ -34,17 +34,7 @@ public class BatchXmlImporter {
             try (Connection conn = DriverManager.getConnection(
                     "jdbc:postgresql://127.0.0.1:5432/postgres", "postgres", "postgres")) {
 
-                final int companyId;
-                try (PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO company(name) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
-                    preparedStatement.setString(1, company.name);
-                    preparedStatement.executeUpdate();
-
-                    try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            companyId = (int) generatedKeys.getLong(1);
-                        } else throw new SQLException("No ID obtained.");
-                    }
-                }
+                final int companyId = insertCompany(company, conn);
 
                 for (Staff staff : company.staff) {
                     insertStaff(conn, companyId, staff);
@@ -52,6 +42,21 @@ public class BatchXmlImporter {
                 }
             }
         }
+    }
+
+    private static int insertCompany(Company company, Connection conn) throws SQLException {
+        final int companyId;
+        try (PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO company(name) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, company.name);
+            preparedStatement.executeUpdate();
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    companyId = (int) generatedKeys.getLong(1);
+                } else throw new SQLException("No ID obtained.");
+            }
+        }
+        return companyId;
     }
 
     private static void insertStaff(Connection conn, int companyId, Staff staff) throws SQLException {
