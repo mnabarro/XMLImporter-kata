@@ -25,6 +25,11 @@ public class BatchXmlImporter {
 
         fileListToCompanyList(paths, companies);
 
+        processCompanies(companies);
+    }
+
+    private static void processCompanies(ArrayList<Company> companies) throws SQLException {
+
         for (Company company : companies) {
             try (Connection conn = DriverManager.getConnection(
                     "jdbc:postgresql://127.0.0.1:5432/postgres", "postgres", "postgres")) {
@@ -42,25 +47,32 @@ public class BatchXmlImporter {
                 }
 
                 for (Staff staff : company.staff) {
-                    try (PreparedStatement preparedStatement = conn.prepareStatement(
-                            "INSERT INTO staff(id,company_id, first_name, last_name, nick_name) VALUES (?,?,?,?,?)")) {
-                        preparedStatement.setInt(1, staff.id);
-                        preparedStatement.setInt(2, companyId);
-                        preparedStatement.setString(3, staff.firstname);
-                        preparedStatement.setString(4, staff.lastname);
-                        preparedStatement.setString(5, staff.nickname);
-                        preparedStatement.executeUpdate();
-                    }
-
-                    try (PreparedStatement preparedStatement = conn.prepareStatement(
-                            "INSERT INTO salary(staff_id, currency, value) VALUES (?,?,?)")) {
-                        preparedStatement.setInt(1, staff.id);
-                        preparedStatement.setString(2, staff.salary.currency);
-                        preparedStatement.setInt(3, staff.salary.value);
-                        preparedStatement.executeUpdate();
-                    }
+                    insertStaff(conn, companyId, staff);
+                    insertStaffSalary(conn, staff);
                 }
             }
+        }
+    }
+
+    private static void insertStaff(Connection conn, int companyId, Staff staff) throws SQLException {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(
+                "INSERT INTO staff(id,company_id, first_name, last_name, nick_name) VALUES (?,?,?,?,?)")) {
+            preparedStatement.setInt(1, staff.id);
+            preparedStatement.setInt(2, companyId);
+            preparedStatement.setString(3, staff.firstname);
+            preparedStatement.setString(4, staff.lastname);
+            preparedStatement.setString(5, staff.nickname);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    private static void insertStaffSalary(Connection conn, Staff staff) throws SQLException {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(
+                "INSERT INTO salary(staff_id, currency, value) VALUES (?,?,?)")) {
+            preparedStatement.setInt(1, staff.id);
+            preparedStatement.setString(2, staff.salary.currency);
+            preparedStatement.setInt(3, staff.salary.value);
+            preparedStatement.executeUpdate();
         }
     }
 
