@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class PostgresConnection {
+public class PostgresConnector {
   public static Connection getConnection() {
       Connection conn;
       try {

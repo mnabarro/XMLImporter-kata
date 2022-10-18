@@ -1,3 +1,4 @@
+import application.ImportCompaniesFromXMLFiles;
 import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.Test;
 import xmlmodels.Company;
@@ -16,16 +17,14 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class BatchXmlImporterShould {
-
+class ImportCompaniesFromXMLFilesTest {
     final Path path = Path.of(System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources");
-
     @Test
     public void import_xml_into_database() throws JAXBException, IOException, SQLException {
-        BatchXmlImporter batchXmlImporter = new BatchXmlImporter();
+        ImportCompaniesFromXMLFiles importCompaniesFromXMLFiles = new ImportCompaniesFromXMLFiles();
         clearTables();
 
-        batchXmlImporter.importFiles(path);
+        importCompaniesFromXMLFiles.importCompaniesFromFiles(path);
 
         var companies = getAllCompanies();
         assertThat(companies).hasSize(2);

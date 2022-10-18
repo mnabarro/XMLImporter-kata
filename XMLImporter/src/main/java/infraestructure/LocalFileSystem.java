@@ -2,6 +2,7 @@ package infraestructure;
 
 import static java.nio.file.Files.walk;
 
+import application.CompanyList;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -38,5 +39,10 @@ public class LocalFileSystem {
           Company company = (Company) jaxbUnmarshaller.unmarshal(file);
           companies.add(company);
       }
+  }
+
+  public static void importFiles(Path folderPath) throws JAXBException, IOException {
+      List<Path> paths = getPathList(folderPath);
+      fileListToCompanyList(paths, CompanyList.companies);
   }
 }
