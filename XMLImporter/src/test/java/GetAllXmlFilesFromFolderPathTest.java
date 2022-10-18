@@ -13,7 +13,7 @@ public class GetAllXmlFilesFromFolderPathTest {
     final Path path = Path.of(System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources");
 
     @Test
-    public void read_only_xml_files_from_folder_path() throws IOException {
+    public void readOnlyXmlFilesFromFolder() throws IOException {
         final String fileExtension = ".xml";
         List<Path> paths = findAllFiles(path, fileExtension);
         assertThat(paths).hasSize(2);
