@@ -28,20 +28,30 @@ public class BatchXmlImporter {
         processCompanies(companies);
     }
 
+
     private static void processCompanies(ArrayList<Company> companies) throws SQLException {
 
+        Connection conn = getConnection();
+
         for (Company company : companies) {
-            try (Connection conn = DriverManager.getConnection(
-                    "jdbc:postgresql://127.0.0.1:5432/postgres", "postgres", "postgres")) {
 
-                final int companyId = insertCompany(company, conn);
+            final int companyId = insertCompany(company, conn);
 
-                for (Staff staff : company.staff) {
-                    insertStaff(conn, companyId, staff);
-                    insertStaffSalary(conn, staff);
-                }
+            for (Staff staff : company.staff) {
+                insertStaff(conn, companyId, staff);
+                insertStaffSalary(conn, staff);
             }
         }
+    }
+
+    private static Connection getConnection() {
+        Connection conn;
+        try {
+            conn = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/postgres", "postgres", "postgres");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return conn;
     }
 
     private static int insertCompany(Company company, Connection conn) throws SQLException {
