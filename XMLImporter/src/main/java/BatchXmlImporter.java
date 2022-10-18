@@ -1,4 +1,3 @@
-import converters.FileListToCompanyList;
 import infraestructure.LocalFileSystem;
 import infraestructure.database.CompanyRepository;
 import infraestructure.database.PostgresConnection;
@@ -21,11 +20,10 @@ public class BatchXmlImporter {
 
         ArrayList<Company> companies = new ArrayList<>();
 
-        FileListToCompanyList.convert(paths, companies);
+        LocalFileSystem.fileListToCompanyList(paths, companies);
 
         processCompanies(companies);
     }
-
 
     private static void processCompanies(ArrayList<Company> companies) throws SQLException {
 
