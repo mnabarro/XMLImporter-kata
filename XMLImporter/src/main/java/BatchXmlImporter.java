@@ -1,5 +1,6 @@
 import converters.FileListToCompanyList;
 import infraestructure.LocalFileSystem;
+import infraestructure.database.CompanyRepository;
 import infraestructure.database.PostgresConnection;
 import infraestructure.database.SalaryRepository;
 import infraestructure.database.StaffRepository;
@@ -32,7 +33,7 @@ public class BatchXmlImporter {
 
         for (Company company : companies) {
 
-            final int companyId = insertCompany(company, conn);
+            final int companyId = CompanyRepository.insert(company, conn);
 
             for (Staff staff : company.staff) {
                 StaffRepository.insert(conn, companyId, staff);
@@ -40,20 +41,4 @@ public class BatchXmlImporter {
             }
         }
     }
-
-    private static int insertCompany(Company company, Connection conn) throws SQLException {
-        final int companyId;
-        try (PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO company(name) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, company.name);
-            preparedStatement.executeUpdate();
-
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    companyId = (int) generatedKeys.getLong(1);
-                } else throw new SQLException("No ID obtained.");
-            }
-        }
-        return companyId;
-    }
-
 }
