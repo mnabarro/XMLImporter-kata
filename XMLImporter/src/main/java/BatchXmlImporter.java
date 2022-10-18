@@ -1,6 +1,7 @@
 import converters.FileListToCompanyList;
 import infraestructure.LocalFileSystem;
 import infraestructure.database.PostgresConnection;
+import infraestructure.database.SalaryRepository;
 import jakarta.xml.bind.JAXBException;
 import xmlmodels.Company;
 import xmlmodels.Staff;
@@ -34,7 +35,7 @@ public class BatchXmlImporter {
 
             for (Staff staff : company.staff) {
                 insertStaff(conn, companyId, staff);
-                insertStaffSalary(conn, staff);
+                SalaryRepository.insert(conn, staff);
             }
         }
     }
@@ -62,16 +63,6 @@ public class BatchXmlImporter {
             preparedStatement.setString(3, staff.firstname);
             preparedStatement.setString(4, staff.lastname);
             preparedStatement.setString(5, staff.nickname);
-            preparedStatement.executeUpdate();
-        }
-    }
-
-    private static void insertStaffSalary(Connection conn, Staff staff) throws SQLException {
-        try (PreparedStatement preparedStatement = conn.prepareStatement(
-                "INSERT INTO salary(staff_id, currency, value) VALUES (?,?,?)")) {
-            preparedStatement.setInt(1, staff.id);
-            preparedStatement.setString(2, staff.salary.currency);
-            preparedStatement.setInt(3, staff.salary.value);
             preparedStatement.executeUpdate();
         }
     }
