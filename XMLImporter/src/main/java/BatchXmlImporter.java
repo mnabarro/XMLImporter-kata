@@ -1,5 +1,6 @@
 import converters.FileListToCompanyList;
 import infraestructure.LocalFileSystem;
+import infraestructure.database.PostgresConnection;
 import jakarta.xml.bind.JAXBException;
 import xmlmodels.Company;
 import xmlmodels.Staff;
@@ -25,7 +26,7 @@ public class BatchXmlImporter {
 
     private static void processCompanies(ArrayList<Company> companies) throws SQLException {
 
-        Connection conn = getConnection();
+        Connection conn = PostgresConnection.getConnection();
 
         for (Company company : companies) {
 
@@ -36,16 +37,6 @@ public class BatchXmlImporter {
                 insertStaffSalary(conn, staff);
             }
         }
-    }
-
-    private static Connection getConnection() {
-        Connection conn;
-        try {
-            conn = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/postgres", "postgres", "postgres");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return conn;
     }
 
     private static int insertCompany(Company company, Connection conn) throws SQLException {
