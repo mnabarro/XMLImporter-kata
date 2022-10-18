@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ImportCompaniesFromXMLFilesTest {
     final Path path = Path.of(System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources");
     @Test
-    public void import_xml_into_database() throws JAXBException, IOException, SQLException {
+    public void importXmlIntoDatabase() throws JAXBException, IOException, SQLException {
         ImportCompaniesFromXMLFiles importCompaniesFromXMLFiles = new ImportCompaniesFromXMLFiles();
         clearTables();
 
