@@ -31,6 +31,7 @@ class ImportCompaniesFromXMLFilesTest {
 
   @Test
   public void importXmlIntoDatabaseTest() throws JAXBException, IOException, SQLException {
+    int xmlFilesWithCompanyDataCount = 2;
     ImportCompaniesFromXMLFiles importCompaniesFromXMLFiles = new ImportCompaniesFromXMLFiles(postgresConnector, companyRepository,
       staffRepository, salaryRepository);
     clearTables();
@@ -38,7 +39,7 @@ class ImportCompaniesFromXMLFilesTest {
     importCompaniesFromXMLFiles.importCompaniesFromFiles(path);
 
     var companies = getAllCompanies();
-    assertThat(companies).hasSize(2);
+    assertThat(companies).hasSize(xmlFilesWithCompanyDataCount);
   }
 
   private void clearTables() throws SQLException {
