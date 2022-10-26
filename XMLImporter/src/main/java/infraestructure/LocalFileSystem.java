@@ -34,11 +34,19 @@ public class LocalFileSystem {
   public void fileListToCompanyList(List<Path> paths, ArrayList<Company> companies) throws JAXBException {
     for (Path path : paths) {
       File file = new File(path.toString());
-      JAXBContext jaxbContext = JAXBContext.newInstance(Company.class);
-      Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-      Company company = (Company) jaxbUnmarshaller.unmarshal(file);
+
+      Company company = parseXmlCompany(file);
+
       companies.add(company);
     }
+  }
+
+  private Company parseXmlCompany(File file) throws JAXBException {
+
+    JAXBContext jaxbContext = JAXBContext.newInstance(Company.class);
+    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    return (Company) jaxbUnmarshaller.unmarshal(file);
+
   }
 
   public void importFiles(Path folderPath, ArrayList<Company> companies) throws JAXBException, IOException {
