@@ -7,7 +7,7 @@ import xmlmodels.Salary;
 
 public class SalaryRepository {
 
-  public static void insert(Connection connection, int staffId, Salary salary) throws SQLException {
+  public void insert(Connection connection, int staffId, Salary salary) throws SQLException {
     try (PreparedStatement preparedStatement = connection.prepareStatement(
       "INSERT INTO salary(staff_id, currency, value) VALUES (?,?,?)")) {
       preparedStatement.setInt(1, staffId);

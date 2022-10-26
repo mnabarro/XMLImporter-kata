@@ -17,31 +17,41 @@ import xmlmodels.Staff;
 
 public class ImportCompaniesFromXMLFiles {
 
+  private final PostgresConnector postgresConnector = new PostgresConnector();
+  private final CompanyRepository companyRepository = new CompanyRepository();
+  private final StaffRepository staffRepository = new StaffRepository();
+  private final SalaryRepository salaryRepository = new SalaryRepository();
+
+  public ImportCompaniesFromXMLFiles() {
+
+  }
+  final ArrayList<Company> companies = new ArrayList<>();
+  LocalFileSystem localFileSystem = new LocalFileSystem();
   public void importCompaniesFromFiles(Path folderPath) throws IOException, JAXBException, SQLException {
-    LocalFileSystem.importFiles(folderPath);
-    saveCompaniesToDatabase(CompanyList.companies);
+    localFileSystem.importFiles(folderPath, companies);
+    saveCompaniesToDatabase(companies);
   }
 
-  private static void saveCompaniesToDatabase(ArrayList<Company> companies) throws SQLException {
+  private void saveCompaniesToDatabase(ArrayList<Company> companies) throws SQLException {
 
-    Connection connection = PostgresConnector.getConnection();
+    Connection connection = postgresConnector.getConnection();
 
     for (Company company : companies) {
 
-      final int companyId = CompanyRepository.insertAndReturnId(company, connection);
-      createCompanyStaff(company, companyId, connection);
+      final int companyId = companyRepository.insertAndReturnId(company, connection);
+      createCompanyStaff(connection, company, companyId);
     }
   }
-  private static void createCompanyStaff(Company company, int companyId, Connection connection) throws SQLException {
+  private void createCompanyStaff(Connection connection, Company company, int companyId) throws SQLException {
 
     for (Staff staff : company.staff) {
-      StaffRepository.insert(connection, companyId, staff);
+      staffRepository.insert(connection, companyId, staff);
       createStaffSalary(connection, staff.id, staff.salary);
     }
   }
 
-  private static void createStaffSalary(Connection connection, int staffId, Salary salary) throws SQLException {
+  private void createStaffSalary(Connection connection, int staffId, Salary salary) throws SQLException {
 
-    SalaryRepository.insert(connection, staffId, salary);
+    salaryRepository.insert(connection, staffId, salary);
   }
 }

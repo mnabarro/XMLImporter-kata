@@ -2,7 +2,6 @@ package infraestructure;
 
 import static java.nio.file.Files.walk;
 
-import application.CompanyList;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -18,7 +17,7 @@ import xmlmodels.Company;
 
 public class LocalFileSystem {
 
-  public static List<Path> getFileWithExtensionPathList(Path folderPath, String fileExtension) throws IOException {
+  public List<Path> getFileWithExtensionPathList(Path folderPath, String fileExtension) throws IOException {
 
     List<Path> paths;
     try (Stream<Path> pathStream = walk(folderPath)
@@ -32,7 +31,7 @@ public class LocalFileSystem {
     return paths;
   }
 
-  public static void fileListToCompanyList(List<Path> paths, ArrayList<Company> companies) throws JAXBException {
+  public void fileListToCompanyList(List<Path> paths, ArrayList<Company> companies) throws JAXBException {
     for (Path path : paths) {
       File file = new File(path.toString());
       JAXBContext jaxbContext = JAXBContext.newInstance(Company.class);
@@ -42,9 +41,9 @@ public class LocalFileSystem {
     }
   }
 
-  public static void importFiles(Path folderPath) throws JAXBException, IOException {
+  public void importFiles(Path folderPath, ArrayList<Company> companies) throws JAXBException, IOException {
     final String fileExtension = ".xml";
     List<Path> paths = getFileWithExtensionPathList(folderPath, fileExtension);
-    fileListToCompanyList(paths, CompanyList.companies);
+    fileListToCompanyList(paths, companies);
   }
 }

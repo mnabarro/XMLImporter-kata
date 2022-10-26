@@ -9,7 +9,7 @@ import xmlmodels.Company;
 
 public class CompanyRepository {
 
-  public static int insertAndReturnId(Company company, Connection conn) throws SQLException {
+  public int insertAndReturnId(Company company, Connection conn) throws SQLException {
 
     try (PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO company(name) VALUES (?)",
       Statement.RETURN_GENERATED_KEYS)) {
@@ -20,7 +20,7 @@ public class CompanyRepository {
     }
   }
 
-  private static int getNewCompanyId(PreparedStatement preparedStatement) throws SQLException {
+  private int getNewCompanyId(PreparedStatement preparedStatement) throws SQLException {
     final int companyId;
 
     try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {

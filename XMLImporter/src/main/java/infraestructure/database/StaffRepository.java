@@ -7,7 +7,7 @@ import xmlmodels.Staff;
 
 public class StaffRepository {
 
-  public static void insert(Connection connection, int companyId, Staff staff) throws SQLException {
+  public void insert(Connection connection, int companyId, Staff staff) throws SQLException {
     try (PreparedStatement preparedStatement = connection.prepareStatement(
       "INSERT INTO staff(id,company_id, first_name, last_name, nick_name) VALUES (?,?,?,?,?)")) {
       preparedStatement.setInt(1, staff.id);
