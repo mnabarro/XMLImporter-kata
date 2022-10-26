@@ -18,8 +18,8 @@ import xmlmodels.Company;
 
 public class LocalFileSystem {
 
-  public static List<Path> getPathList(Path folderPath) throws IOException {
-    final String fileExtension = ".xml";
+  public static List<Path> getFileWithExtensionPathList(Path folderPath, String fileExtension) throws IOException {
+
     List<Path> paths;
     try (Stream<Path> pathStream = walk(folderPath)
       .filter(Files::isRegularFile)
@@ -43,7 +43,8 @@ public class LocalFileSystem {
   }
 
   public static void importFiles(Path folderPath) throws JAXBException, IOException {
-    List<Path> paths = getPathList(folderPath);
+    final String fileExtension = ".xml";
+    List<Path> paths = getFileWithExtensionPathList(folderPath, fileExtension);
     fileListToCompanyList(paths, CompanyList.companies);
   }
 }
