@@ -23,12 +23,17 @@ public class ImportCompaniesFromXMLFiles {
     for (Company company : companies) {
 
       final int companyId = CompanyRepository.insert(company, connection);
-
-      for (Staff staff : company.staff) {
-        StaffRepository.insert(connection, companyId, staff);
-        SalaryRepository.insert(connection, staff);
-      }
+      createCompanyStaff(company, companyId, connection);
     }
+  }
+
+  private static void createCompanyStaff(Company company, int companyId, Connection connection) throws SQLException {
+
+    for (Staff staff : company.staff) {
+      StaffRepository.insert(connection, companyId, staff);
+      SalaryRepository.insert(connection, staff);
+    }
+
   }
 
   public void importCompaniesFromFiles(Path folderPath) throws IOException, JAXBException, SQLException {

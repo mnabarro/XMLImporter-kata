@@ -10,8 +10,8 @@ public class PostgresConnector {
     Connection connection;
     try {
       connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/postgres", "postgres", "postgres");
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+    } catch (SQLException exception) {
+      throw new RuntimeException(exception);
     }
     return connection;
   }
