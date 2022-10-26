@@ -6,12 +6,13 @@ import infraestructure.database.PostgresConnector;
 import infraestructure.database.SalaryRepository;
 import infraestructure.database.StaffRepository;
 import jakarta.xml.bind.JAXBException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import xmlmodels.Company;
 import xmlmodels.Staff;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.sql.*;
 import java.util.ArrayList;
 
 public class ImportCompaniesFromXMLFiles {

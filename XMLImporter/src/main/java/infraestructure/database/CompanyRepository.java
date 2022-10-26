@@ -10,17 +10,27 @@ import xmlmodels.Company;
 public class CompanyRepository {
 
   public static int insert(Company company, Connection conn) throws SQLException {
-      final int companyId;
-      try (PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO company(name) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
-          preparedStatement.setString(1, company.name);
-          preparedStatement.executeUpdate();
 
-          try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-              if (generatedKeys.next()) {
-                  companyId = (int) generatedKeys.getLong(1);
-              } else throw new SQLException("No ID obtained.");
-          }
-      }
-      return companyId;
+    try (PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO company(name) VALUES (?)",
+      Statement.RETURN_GENERATED_KEYS)) {
+      preparedStatement.setString(1, company.name);
+      preparedStatement.executeUpdate();
+
+      return getNewCompanyId(preparedStatement);
+    }
+  }
+
+  private static int getNewCompanyId(PreparedStatement preparedStatement) throws SQLException {
+    final int companyId;
+
+    try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+        if (generatedKeys.next()) {
+            companyId = (int) generatedKeys.getLong(1);
+        } else {
+            throw new SQLException("No ID obtained.");
+        }
+    }
+    return companyId;
+
   }
 }
