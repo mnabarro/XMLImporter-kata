@@ -6,8 +6,9 @@ import jakarta.xml.bind.annotation.XmlValue;
 
 @XmlRootElement
 public class Salary {
-    @XmlAttribute
-    public String currency;
-    @XmlValue
-    public int value;
+
+  @XmlAttribute
+  public String currency;
+  @XmlValue
+  public int value;
 }

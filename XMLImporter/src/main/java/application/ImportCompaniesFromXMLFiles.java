@@ -6,20 +6,15 @@ import infraestructure.database.PostgresConnector;
 import infraestructure.database.SalaryRepository;
 import infraestructure.database.StaffRepository;
 import jakarta.xml.bind.JAXBException;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import xmlmodels.Company;
 import xmlmodels.Staff;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-
 public class ImportCompaniesFromXMLFiles {
-  public void importCompaniesFromFiles(Path folderPath) throws IOException, JAXBException, SQLException {
-    LocalFileSystem.importFiles(folderPath);
-    saveCompaniesToDatabase(CompanyList.companies);
-  }
 
   private static void saveCompaniesToDatabase(ArrayList<Company> companies) throws SQLException {
 
@@ -34,5 +29,10 @@ public class ImportCompaniesFromXMLFiles {
         SalaryRepository.insert(connection, staff);
       }
     }
+  }
+
+  public void importCompaniesFromFiles(Path folderPath) throws IOException, JAXBException, SQLException {
+    LocalFileSystem.importFiles(folderPath);
+    saveCompaniesToDatabase(CompanyList.companies);
   }
 }
