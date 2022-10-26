@@ -17,13 +17,18 @@ import xmlmodels.Staff;
 
 public class ImportCompaniesFromXMLFiles {
 
-  private final PostgresConnector postgresConnector = new PostgresConnector();
-  private final CompanyRepository companyRepository = new CompanyRepository();
-  private final StaffRepository staffRepository = new StaffRepository();
-  private final SalaryRepository salaryRepository = new SalaryRepository();
+  private final PostgresConnector postgresConnector;
+  private final CompanyRepository companyRepository;
+  private final StaffRepository staffRepository;
+  private final SalaryRepository salaryRepository;
 
-  public ImportCompaniesFromXMLFiles() {
+  public ImportCompaniesFromXMLFiles(PostgresConnector postgresConnector, CompanyRepository companyRepository,
+    StaffRepository staffRepository, SalaryRepository salaryRepository) {
 
+    this.postgresConnector = postgresConnector;
+    this.companyRepository = companyRepository;
+    this.staffRepository = staffRepository;
+    this.salaryRepository = salaryRepository;
   }
   final ArrayList<Company> companies = new ArrayList<>();
   LocalFileSystem localFileSystem = new LocalFileSystem();

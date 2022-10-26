@@ -1,6 +1,10 @@
 import static org.assertj.core.api.Assertions.assertThat;
 
 import application.ImportCompaniesFromXMLFiles;
+import infraestructure.database.CompanyRepository;
+import infraestructure.database.PostgresConnector;
+import infraestructure.database.SalaryRepository;
+import infraestructure.database.StaffRepository;
 import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
@@ -20,10 +24,15 @@ class ImportCompaniesFromXMLFilesTest {
 
   final Path path = Path.of(
     System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources");
+  PostgresConnector postgresConnector = new PostgresConnector();
+  CompanyRepository companyRepository = new CompanyRepository();
+  StaffRepository staffRepository = new StaffRepository();
+  SalaryRepository salaryRepository = new SalaryRepository();
 
   @Test
   public void importXmlIntoDatabaseTest() throws JAXBException, IOException, SQLException {
-    ImportCompaniesFromXMLFiles importCompaniesFromXMLFiles = new ImportCompaniesFromXMLFiles();
+    ImportCompaniesFromXMLFiles importCompaniesFromXMLFiles = new ImportCompaniesFromXMLFiles(postgresConnector, companyRepository,
+      staffRepository, salaryRepository);
     clearTables();
 
     importCompaniesFromXMLFiles.importCompaniesFromFiles(path);
