@@ -3,16 +3,16 @@ package infraestructure.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import xmlmodels.Staff;
+import xmlmodels.Salary;
 
 public class SalaryRepository {
 
-  public static void insert(Connection connection, Staff staff) throws SQLException {
+  public static void insert(Connection connection, int staffId, Salary salary) throws SQLException {
     try (PreparedStatement preparedStatement = connection.prepareStatement(
       "INSERT INTO salary(staff_id, currency, value) VALUES (?,?,?)")) {
-      preparedStatement.setInt(1, staff.id);
-      preparedStatement.setString(2, staff.salary.currency);
-      preparedStatement.setInt(3, staff.salary.value);
+      preparedStatement.setInt(1, staffId);
+      preparedStatement.setString(2, salary.currency);
+      preparedStatement.setInt(3, salary.value);
       preparedStatement.executeUpdate();
     }
   }
