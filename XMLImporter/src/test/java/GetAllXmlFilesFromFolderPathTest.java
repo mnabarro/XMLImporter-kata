@@ -15,9 +15,10 @@ public class GetAllXmlFilesFromFolderPathTest {
 
   @Test
   public void readOnlyXmlFilesFromFolderTest() throws IOException {
+    int xmlFilesWithCompanyDataCount = 2;
     final String fileExtension = ".xml";
     List<Path> paths = findAllFilesWithGivenExtension(path, fileExtension);
-    assertThat(paths).hasSize(2);
+    assertThat(paths).hasSize(xmlFilesWithCompanyDataCount);
   }
 
   private List<Path> findAllFilesWithGivenExtension(Path folderPath, String fileExtension) throws IOException {

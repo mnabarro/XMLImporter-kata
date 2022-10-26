@@ -17,11 +17,12 @@ import xmlmodels.Staff;
 
 public class ImportCompaniesFromXMLFiles {
 
+  final ArrayList<Company> companies = new ArrayList<>();
   private final PostgresConnector postgresConnector;
   private final CompanyRepository companyRepository;
   private final StaffRepository staffRepository;
   private final SalaryRepository salaryRepository;
-
+  LocalFileSystem localFileSystem = new LocalFileSystem();
   public ImportCompaniesFromXMLFiles(PostgresConnector postgresConnector, CompanyRepository companyRepository,
     StaffRepository staffRepository, SalaryRepository salaryRepository) {
 
@@ -30,8 +31,7 @@ public class ImportCompaniesFromXMLFiles {
     this.staffRepository = staffRepository;
     this.salaryRepository = salaryRepository;
   }
-  final ArrayList<Company> companies = new ArrayList<>();
-  LocalFileSystem localFileSystem = new LocalFileSystem();
+
   public void importCompaniesFromFiles(Path folderPath) throws IOException, JAXBException, SQLException {
     localFileSystem.importFiles(folderPath, companies);
     saveCompaniesToDatabase(companies);
@@ -47,6 +47,7 @@ public class ImportCompaniesFromXMLFiles {
       createCompanyStaff(connection, company, companyId);
     }
   }
+
   private void createCompanyStaff(Connection connection, Company company, int companyId) throws SQLException {
 
     for (Staff staff : company.staff) {

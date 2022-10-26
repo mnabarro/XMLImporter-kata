@@ -24,11 +24,11 @@ public class CompanyRepository {
     final int companyId;
 
     try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-            companyId = (int) generatedKeys.getLong(1);
-        } else {
-            throw new SQLException("No ID obtained.");
-        }
+      if (generatedKeys.next()) {
+        companyId = (int) generatedKeys.getLong(1);
+      } else {
+        throw new SQLException("No ID obtained.");
+      }
     }
     return companyId;
 
