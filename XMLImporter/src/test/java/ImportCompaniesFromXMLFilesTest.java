@@ -22,7 +22,7 @@ class ImportCompaniesFromXMLFilesTest {
     System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources");
 
   @Test
-  public void importXmlIntoDatabase() throws JAXBException, IOException, SQLException {
+  public void importXmlIntoDatabaseTest() throws JAXBException, IOException, SQLException {
     ImportCompaniesFromXMLFiles importCompaniesFromXMLFiles = new ImportCompaniesFromXMLFiles();
     clearTables();
 

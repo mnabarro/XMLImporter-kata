@@ -14,13 +14,13 @@ public class GetAllXmlFilesFromFolderPathTest {
     System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources");
 
   @Test
-  public void readOnlyXmlFilesFromFolder() throws IOException {
+  public void readOnlyXmlFilesFromFolderTest() throws IOException {
     final String fileExtension = ".xml";
-    List<Path> paths = findAllFiles(path, fileExtension);
+    List<Path> paths = findAllFilesWithGivenExtension(path, fileExtension);
     assertThat(paths).hasSize(2);
   }
 
-  private List<Path> findAllFiles(Path folderPath, String fileExtension) throws IOException {
+  private List<Path> findAllFilesWithGivenExtension(Path folderPath, String fileExtension) throws IOException {
     return Files.walk(folderPath)
       .filter(Files::isRegularFile)
       .filter(filePath ->
