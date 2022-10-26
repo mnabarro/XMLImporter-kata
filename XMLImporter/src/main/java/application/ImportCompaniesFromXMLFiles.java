@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import xmlmodels.Company;
+import xmlmodels.Salary;
 import xmlmodels.Staff;
 
 public class ImportCompaniesFromXMLFiles {
@@ -35,12 +36,12 @@ public class ImportCompaniesFromXMLFiles {
 
     for (Staff staff : company.staff) {
       StaffRepository.insert(connection, companyId, staff);
-      createStaffSalary(connection, staff);
+      createStaffSalary(connection, staff.id, staff.salary);
     }
   }
 
-  private static void createStaffSalary(Connection connection, Staff staff) throws SQLException {
+  private static void createStaffSalary(Connection connection, int staffId, Salary salary) throws SQLException {
 
-    SalaryRepository.insert(connection, staff.id, staff.salary);
+    SalaryRepository.insert(connection, staffId, salary);
   }
 }
