@@ -41,11 +41,13 @@ public class ImportCompaniesFromXMLFiles {
 
     Connection connection = postgresConnector.getConnection();
 
-    for (Company company : companies) {
+    for (Company company : companies) saveCompanyToDatabase(connection, company);
 
-      final int companyId = companyRepository.insertAndReturnId(company, connection);
-      createCompanyStaff(connection, company, companyId);
-    }
+  }
+
+  private void saveCompanyToDatabase(Connection connection, Company company) throws SQLException {
+    final int companyId = companyRepository.insertAndReturnId(company, connection);
+    createCompanyStaff(connection, company, companyId);
   }
 
   private void createCompanyStaff(Connection connection, Company company, int companyId) throws SQLException {
