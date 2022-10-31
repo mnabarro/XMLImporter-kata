@@ -17,21 +17,24 @@ import xmlmodels.Company;
 
 public class LocalFileSystem {
 
-  public List<Path> getFileWithExtensionPathList(Path folderPath, String fileExtension) throws IOException {
+  private List<Path> getFileWithExtensionPathList(Path folderPath, String fileExtension) throws IOException {
 
     List<Path> paths;
-    try (Stream<Path> pathStream = walk(folderPath)
-      .filter(Files::isRegularFile)
-      .filter(filePath ->
-        filePath.toString()
-          .endsWith(fileExtension))) {
-      paths = pathStream
-        .collect(Collectors.toList());
+    try (Stream<Path> pathStream = walk(folderPath).filter(Files::isRegularFile)
+      .filter(filePath -> filePath.toString().endsWith(fileExtension))) {
+      paths = pathStream.collect(Collectors.toList());
     }
     return paths;
   }
 
-  public void fileListToCompanyList(List<Path> paths, ArrayList<Company> companies) throws JAXBException {
+  public ArrayList<Company> importFiles(Path folderPath) throws JAXBException, IOException {
+    final String fileExtension = ".xml";
+    List<Path> paths = getFileWithExtensionPathList(folderPath, fileExtension);
+    return fileListToCompanyList(paths);
+  }
+
+  private ArrayList<Company> fileListToCompanyList(List<Path> paths) throws JAXBException {
+    ArrayList<Company> companies = new ArrayList<>();
     for (Path path : paths) {
       File file = new File(path.toString());
 
@@ -39,6 +42,7 @@ public class LocalFileSystem {
 
       companies.add(company);
     }
+    return companies;
   }
 
   private Company parseXmlCompany(File file) throws JAXBException {
@@ -47,11 +51,5 @@ public class LocalFileSystem {
     Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
     return (Company) jaxbUnmarshaller.unmarshal(file);
 
-  }
-
-  public void importFiles(Path folderPath, ArrayList<Company> companies) throws JAXBException, IOException {
-    final String fileExtension = ".xml";
-    List<Path> paths = getFileWithExtensionPathList(folderPath, fileExtension);
-    fileListToCompanyList(paths, companies);
   }
 }

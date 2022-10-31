@@ -33,7 +33,7 @@ public class ImportCompaniesFromXMLFiles {
   }
 
   public void importCompaniesFromFiles(Path folderPath) throws IOException, JAXBException, SQLException {
-    localFileSystem.importFiles(folderPath, companies);
+    ArrayList<Company> companies = localFileSystem.importFiles(folderPath);
     saveCompaniesToDatabase(companies);
   }
 
