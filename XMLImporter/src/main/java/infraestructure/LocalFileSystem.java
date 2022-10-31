@@ -35,17 +35,13 @@ public class LocalFileSystem {
 
   private ArrayList<Company> fileListToCompanyList(List<Path> paths) throws JAXBException {
     ArrayList<Company> companies = new ArrayList<>();
-    for (Path path : paths) {
-      File file = new File(path.toString());
 
-      Company company = parseXmlCompany(file);
-
-      companies.add(company);
-    }
+    for (Path path : paths) companies.add(parseCompanyFromXmlFile(path));
     return companies;
   }
 
-  private Company parseXmlCompany(File file) throws JAXBException {
+  private Company parseCompanyFromXmlFile(Path path) throws JAXBException {
+    File file = new File(path.toString());
 
     JAXBContext jaxbContext = JAXBContext.newInstance(Company.class);
     Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();

@@ -16,8 +16,6 @@ import xmlmodels.Salary;
 import xmlmodels.Staff;
 
 public class ImportCompaniesFromXMLFiles {
-
-  final ArrayList<Company> companies = new ArrayList<>();
   private final PostgresConnector postgresConnector;
   private final CompanyRepository companyRepository;
   private final StaffRepository staffRepository;
